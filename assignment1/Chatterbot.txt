@@ -26,17 +26,21 @@ type BotBrain = [(Phrase, [Phrase])]
 
 --------------------------------------------------------
 
+--generates a random reply using rulesapply and botbrain
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
 {- TO BE WRITTEN -}
 stateOfMind _ = return id
+        r <- randomIO :: IO Float
+        --something something method calls something
 
+--Transforms a phrase relating to a list of pattern transformations, see task4b). 
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
-{- TO BE WRITTEN -}
-rulesApply _ = id
+rulesApply = try . transformationsApply "*" reflect
 
+
+--Tries to replace each word in a phrase in accordance with "reflections", see task 4a).
 reflect :: Phrase -> Phrase
-{- TO BE WRITTEN -}
-reflect = id
+reflect = map try (flip lookup reflections)
 
 reflections =
   [ ("am",     "are"),
@@ -156,14 +160,17 @@ matchCheck = matchTest == Just testSubstitutions
 
 -- Applying a single pattern
 transformationApply :: Eq a => a -> ([a] -> [a]) -> [a] -> ([a], [a]) -> Maybe [a]
+<<<<<<< HEAD
 transformationApply _ _ _ _ = Nothing
 {- TO BE WRITTEN -}
 transformationApply wc f (x:xs) (tu1, tu2) = 
+=======
+transformationApply wildcard func target (key, value) = mmap (substitute wildcard value) (mmap func (match wildcard key target))
+>>>>>>> c8d0877e590ac40adcfb6fcc13569d22e3de1686
 
 
 -- Applying a list of patterns until one succeeds
 transformationsApply :: Eq a => a -> ([a] -> [a]) -> [([a], [a])] -> [a] -> Maybe [a]
-transformationsApply _ _ _ _ = Nothing
-{- TO BE WRITTEN -}
+transformationsApply wildcard fun dictionary lookupList = foldl1 orElse (map (transformationApply wildcard fun lookupList) dictionary)
 
 
