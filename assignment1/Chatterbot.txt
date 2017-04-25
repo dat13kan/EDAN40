@@ -158,6 +158,7 @@ matchCheck = matchTest == Just testSubstitutions
 transformationApply :: Eq a => a -> ([a] -> [a]) -> [a] -> ([a], [a]) -> Maybe [a]
 transformationApply _ _ _ _ = Nothing
 {- TO BE WRITTEN -}
+transformationApply wc f (x:xs) (tu1, tu2) = 
 
 
 -- Applying a list of patterns until one succeeds
