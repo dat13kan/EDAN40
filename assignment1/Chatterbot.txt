@@ -160,13 +160,7 @@ matchCheck = matchTest == Just testSubstitutions
 
 -- Applying a single pattern
 transformationApply :: Eq a => a -> ([a] -> [a]) -> [a] -> ([a], [a]) -> Maybe [a]
-<<<<<<< HEAD
-transformationApply _ _ _ _ = Nothing
-{- TO BE WRITTEN -}
-transformationApply wc f (x:xs) (tu1, tu2) = 
-=======
 transformationApply wildcard func target (key, value) = mmap (substitute wildcard value) (mmap func (match wildcard key target))
->>>>>>> c8d0877e590ac40adcfb6fcc13569d22e3de1686
 
 
 -- Applying a list of patterns until one succeeds
