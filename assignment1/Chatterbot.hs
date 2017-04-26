@@ -29,9 +29,9 @@ type BotBrain = [(Phrase, [Phrase])]
 --generates a random reply using rulesapply and botbrain
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
 {- TO BE WRITTEN -}
-stateOfMind _ = return id
+stateOfMind brain = do
     r <- randomIO :: IO Float
-	
+	return (rulesApply (map.map2) (id, pick r) brain)
     --something something method calls something
 
 --Transforms a phrase relating to a list of pattern transformations, see task4b). 
@@ -77,6 +77,7 @@ prepare = reduce . words . map toLower . filter (not . flip elem ".,:;*!#%&|")
 rulesCompile :: [(String, [String])] -> BotBrain
 {- TO BE WRITTEN -}
 rulesCompile _ = []
+rulesCompile rules = map.map2 (words.toLower, map words.toLower)
 
 
 --------------------------------------
