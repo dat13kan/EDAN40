@@ -28,12 +28,10 @@ type BotBrain = [(Phrase, [Phrase])]
 
 --generates a random reply using rulesapply and botbrain
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
-{- TO BE WRITTEN -}
-stateOfMind brain = do
-    r <- randomIO :: IO Float
-	return (rulesApply (map.map2) (id, pick r) brain)
-    --something something method calls something
-
+stateOfMind brain = 
+   do 
+     r <- randomIO :: IO Float
+     return (rulesApply ((map . map2) (id, pick r) brain))
 --Transforms a phrase relating to a list of pattern transformations, see task4b). 
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
 rulesApply = try . transformationsApply "*" reflect
@@ -41,7 +39,7 @@ rulesApply = try . transformationsApply "*" reflect
 
 --Tries to replace each word in a phrase in accordance with "reflections", see task 4a).
 reflect :: Phrase -> Phrase
-reflect = map try (flip lookup reflections)
+reflect = map (try (flip lookup reflections))
 
 reflections =
   [ ("am",     "are"),
@@ -75,9 +73,7 @@ prepare :: String -> Phrase
 prepare = reduce . words . map toLower . filter (not . flip elem ".,:;*!#%&|") 
 
 rulesCompile :: [(String, [String])] -> BotBrain
-{- TO BE WRITTEN -}
-rulesCompile _ = []
-rulesCompile = map.map2 (words.map toLower, map words)
+rulesCompile = (map.map2) (words.map toLower, map words)
 
 
 --------------------------------------
@@ -102,7 +98,6 @@ reduce :: Phrase -> Phrase
 reduce = reductionsApply reductions
 
 reductionsApply :: [PhrasePair] -> Phrase -> Phrase
-{- TO BE WRITTEN -}
 reductionsApply _ = id
 
 
@@ -112,17 +107,16 @@ reductionsApply _ = id
 
 -- Replaces a wildcard in a list with the list given as the third argument
 substitute :: Eq a => a -> [a] -> [a] -> [a]
-substitute [] b c = b
 substitute wc [] c = []
 substitute wc (x:xs) c
-    | x==wc      = c:substitute wc xs c
+    | x==wc     = c++ substitute wc xs c
     | otherwise = x:substitute wc xs c
 
 
 -- Tries to match two lists. If they match, the result consists of the sublist
 -- bound to the wildcard in the pattern list.
 match :: Eq a => a -> [a] -> [a] -> Maybe [a]
-match _ [] [] = []
+match _ [] [] = Just []
 match _ _ [] = Nothing
 match _ [] _ = Nothing
 match a (b:bs) (c:cs)
@@ -136,9 +130,7 @@ singleWildcardMatch [] [] = Just []
 singleWildcardMatch _ [] = Nothing
 singleWildcardMatch [] _ = Nothing
 singleWildcardMatch (wc:ps) (x:xs) = mmap (const [x]) (match wc ps xs)
-{- TO BE WRITTEN -}
 longerWildcardMatch (wc:ps) (x:xs) = mmap (x:) (match wc (wc:ps) xs)
-{- TO BE WRITTEN -}
 
 
 
