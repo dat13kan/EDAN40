@@ -30,8 +30,9 @@ type BotBrain = [(Phrase, [Phrase])]
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
 {- TO BE WRITTEN -}
 stateOfMind _ = return id
-        --r <- randomIO :: IO Float
-        --something something method calls something
+    r <- randomIO :: IO Float
+	
+    --something something method calls something
 
 --Transforms a phrase relating to a list of pattern transformations, see task4b). 
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
