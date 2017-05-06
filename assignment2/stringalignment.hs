@@ -19,8 +19,8 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simTable = [[ simEntry i j | j<-[0..]] | i<-[0..] ]
        
     simEntry :: Int -> Int -> Int
-	simEntry i 0 = i * scoreSpace
-	simEntry 0 j = j * scoreSpace
+    simEntry i 0 = i * scoreSpace
+    simEntry 0 j = j * scoreSpace
     simEntry i j
       | x == y    = scoreMatch + simScore (i-1) (j-1)
       | otherwise = max(scoreSpace + max (simScore i (j-1)) 
