@@ -13,9 +13,21 @@ string2 = "vintner"
 -- 2a.)
 --returns the score of the optimal alignment of the two strings 
 similarityScore :: String -> String -> Int
-similarityScore string1 string2
--- to be written --
-
+similarityScore string1 string2 = simScore (length string1) (length string2)
+  where
+    simScore i j = simTable!!i!!j
+    simTable = [[ simEntry i j | j<-[0..]] | i<-[0..] ]
+       
+    simEntry :: Int -> Int -> Int
+    simEntry _ 0 = 0
+    simEntry 0 _ = 0
+    simEntry i j
+      | x == y    = 1 + simScore (i-1) (j-1)
+      | otherwise = max (simScore i (j-1)) 
+                        (simScore (i-1) j)
+      where
+         x = string1!!(i-1)
+         y = string2!!(j-1)
 
 --2a.)
 --explanation to be written here
