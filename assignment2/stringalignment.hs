@@ -5,8 +5,9 @@
 scoreMatch = 0
 scoreMismatch = -1
 scoreSpace = -1
-string2 = "writers"
-string1 = "vintner"
+string1 = "apa"
+string2 = "aka"
+string3 = "apa "
 
 
 
@@ -21,9 +22,7 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry :: Int -> Int -> Int
     simEntry i 0 = i * scoreSpace
     simEntry 0 j = j * scoreSpace
-    simEntry i j
-      | x == y    = scoreMatch + simScore (i-1) (j-1)
-      | otherwise = maximum [(simEntry i j) + (score x y), (simEntry i (j-1)) + (score x '-'), (simEntry (i-1) j) + (score '-' y)]
+    simEntry i j = maximum [(simTable!!(i-1)!!(j-1)) + (score x y), (simTable!!i!!(j-1)) + (score x '-'), (simTable!!(i-1)!!j) + (score '-' y)]
 	  where
          x = string1!!(i-1)
          y = string2!!(j-1)
@@ -33,7 +32,7 @@ score  _ '-' = scoreSpace
 score  '-' _ = scoreSpace
 score x y 
     |x == y = scoreMatch
-    |x /= y  = scoreMismatch
+    |otherwise  = scoreMismatch
 
 --2a.)
 --explanation to be written here
