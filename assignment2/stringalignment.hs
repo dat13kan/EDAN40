@@ -6,7 +6,7 @@ scoreMatch = 0
 scoreMismatch = -1
 scoreSpace = -1
 string2 = "writers"
-string1 = "vintneroasdfasdf"
+string1 = "vintner"
 
 
 
@@ -23,7 +23,7 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry 0 j = j * scoreSpace
     simEntry i j
       | x == y    = scoreMatch + simScore (i-1) (j-1)
-      | otherwise = max [(simEntry i j) + (score i-1 j-1), (simEntry i j-1) + (score x '-'), (sim i-1 j) + (score '-' y)]
+      | otherwise = maximum [(simEntry i j) + (score x y), (simEntry i (j-1)) + (score x '-'), (simEntry (i-1) j) + (score '-' y)]
 	  where
          x = string1!!(i-1)
          y = string2!!(j-1)
