@@ -28,12 +28,12 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
          x = string1!!(i-1)
          y = string2!!(j-1)
 		 
-score :: char -> char -> Int
-    score x '-' = scoreSpace
-    score '-' y = scoreSpace
-    score x y 
-      |x == y = scoreMatch
-      |x /= y  = scoreMismatch
+score :: Char -> Char -> Int
+score  _ '-' = scoreSpace
+score  '-' _ = scoreSpace
+score x y 
+    |x == y = scoreMatch
+    |x /= y  = scoreMismatch
 
 --2a.)
 --explanation to be written here
