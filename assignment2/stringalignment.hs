@@ -22,7 +22,7 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry :: Int -> Int -> Int
     simEntry i 0 = i * scoreSpace
     simEntry 0 j = j * scoreSpace
-    simEntry i j = maximum [(simTable!!(i-1)!!(j-1)) + (score x y), (simTable!!i!!(j-1)) + (score x '-'), (simTable!!(i-1)!!j) + (score '-' y)]
+    simEntry i j = maximum [(simScore (i-1) (j-1)) + (score x y), (simScore i (j-1)) + (score x '-'), (simScore (i-1) j) + (score '-' y)]
 	  where
          x = string1!!(i-1)
          y = string2!!(j-1)
