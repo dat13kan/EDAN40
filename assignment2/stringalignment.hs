@@ -5,8 +5,8 @@
 scoreMatch = 0
 scoreMismatch = -1
 scoreSpace = -1
-string1 = "writers"
-string2 = "vintner"
+string2 = "writers"
+string1 = "vintneroasdfasdf"
 
 
 
@@ -23,10 +23,13 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry 0 j = j * scoreSpace
     simEntry i j
       | x == y    = scoreMatch + simScore (i-1) (j-1)
-      | otherwise = max(scoreSpace + max (simScore i (j-1)) 
-                        (simScore (i-1) j))
-						(scoreMismarch + simScore (i-1) (j-1))
+      | otherwise = max {simEntry(i,j) + score(i-1, j-1), simEntry(i,j-1) + score(x,'-'), sim(i-1,j) + score('-',y)}
       where
+        score :: char -> char -> Int
+        score(x,'-') = score('-', y) = scoreSpace
+        score(x,y) = scoreMatch, if x == ys
+                     scoreMismatch, if x /= y
+	  where
          x = string1!!(i-1)
          y = string2!!(j-1)
 
@@ -41,14 +44,14 @@ attachHeads h1 h2 aList = [(h1:xs,h2:ys) | (xs,ys) <- aList]
 --1. The "value" of an element is defined by a function supplied as a parameter.
 --2. Instead of just one element, the result is a list of all maximum elements.
 -- For example, maximaBy length ["cs", "efd", "lth", "it"] should return ["efd", "lth"].
-maximaBy :: Ord b => (a -> b) -> [a] -> [a] 
-maximaBy valueFcn xs
+--maximaBy :: Ord b => (a -> b) -> [a] -> [a] 
+--maximaBy valueFcn xs
 
 
 type AlignmentType = (String,String)
 
 --returns a list of all optimal alignments between string1 and string2
-optAlignments :: String -> String -> [AlignmentType]
-optAlignments string1 string2
+--optAlignments :: String -> String -> [AlignmentType]
+--optAlignments string1 string2
 
 
