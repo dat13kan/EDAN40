@@ -23,15 +23,17 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry 0 j = j * scoreSpace
     simEntry i j
       | x == y    = scoreMatch + simScore (i-1) (j-1)
-      | otherwise = max {simEntry(i,j) + score(i-1, j-1), simEntry(i,j-1) + score(x,'-'), sim(i-1,j) + score('-',y)}
-      where
-        score :: char -> char -> Int
-        score(x,'-') = score('-', y) = scoreSpace
-        score(x,y) = scoreMatch, if x == ys
-                     scoreMismatch, if x /= y
+      | otherwise = max [(simEntry i j) + (score i-1 j-1), (simEntry i j-1) + (score x '-'), (sim i-1 j) + (score '-' y)]
 	  where
          x = string1!!(i-1)
          y = string2!!(j-1)
+		 
+score :: char -> char -> Int
+    score x '-' = scoreSpace
+    score '-' y = scoreSpace
+    score x y 
+      |x == y = scoreMatch
+      |x /= y  = scoreMismatch
 
 --2a.)
 --explanation to be written here
