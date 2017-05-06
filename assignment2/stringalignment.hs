@@ -22,9 +22,10 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry _ 0 = 0
     simEntry 0 _ = 0
     simEntry i j
-      | x == y    = 1 + simScore (i-1) (j-1)
-      | otherwise = max (simScore i (j-1)) 
-                        (simScore (i-1) j)
+      | x == y    = scoreMatch + simScore (i-1) (j-1)
+      | otherwise = max(scoreSpace + max (simScore i (j-1)) 
+                        (simScore (i-1) j))
+						(scoreMismarch + simScore (i-1) (j-1))
       where
          x = string1!!(i-1)
          y = string2!!(j-1)
