@@ -1,5 +1,5 @@
 
-
+import Data.List
 
 
 scoreMatch = 0
@@ -8,6 +8,8 @@ scoreSpace = -1
 string1 = "apa"
 string2 = "aka"
 string3 = "apa "
+
+stringList = ["cs", "efd", "lth", "it"]
 
 
 
@@ -23,10 +25,10 @@ similarityScore string1 string2 = simScore (length string1) (length string2)
     simEntry i 0 = i * scoreSpace
     simEntry 0 j = j * scoreSpace
     simEntry i j = maximum [(simScore (i-1) (j-1)) + (score x y), (simScore i (j-1)) + (score x '-'), (simScore (i-1) j) + (score '-' y)]
-	  where
+      where
          x = string1!!(i-1)
          y = string2!!(j-1)
-		 
+
 score :: Char -> Char -> Int
 score  _ '-' = scoreSpace
 score  '-' _ = scoreSpace
@@ -45,11 +47,16 @@ attachHeads h1 h2 aList = [(h1:xs,h2:ys) | (xs,ys) <- aList]
 --1. The "value" of an element is defined by a function supplied as a parameter.
 --2. Instead of just one element, the result is a list of all maximum elements.
 -- For example, maximaBy length ["cs", "efd", "lth", "it"] should return ["efd", "lth"].
---maximaBy :: Ord b => (a -> b) -> [a] -> [a] 
---maximaBy valueFcn xs
+maximaBy :: Ord b => (a -> b) -> [a] -> [a] 
+maximaBy valueFcn xs = helper (elemIndices (maximum valueList) valueList) xs 
+  where
+    helper _ [] = []
+    helper [] _ = []
+    helper (i:indexList) xs = (xs !! i) : helper indexList xs
+    valueList = (map valueFcn xs)
 
 
-type AlignmentType = (String,String)
+--type AlignmentType = (String,String)
 
 --returns a list of all optimal alignments between string1 and string2
 --optAlignments :: String -> String -> [AlignmentType]
