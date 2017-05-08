@@ -76,8 +76,9 @@ optAlignments string1 string2 = optAl (length string1) (length string2)
     optTable = [[ optEntry i j | j <-[0..]] | i<-[0..] ]
 
     optEntry :: Int -> Int -> (Int, [AlignmentType])
-    optEntry i 0 = i * scoreSpace
-    optEntry 0 j = j * scoreSpace
+	optEntry 0 0 = (0, [([],[])]
+    optEntry i 0 = (scoreSpace + optAl i-1 0, [([],[])]) --something to be added to lists
+    optEntry 0 j = (scoreSpace + optAl 0 j-1), [([],[])]) --something to be added to lists
     optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
       where
          x = string1!!(i-1)
