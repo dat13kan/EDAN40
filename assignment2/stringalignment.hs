@@ -36,9 +36,8 @@ score x y
     |x == y = scoreMatch
     |otherwise  = scoreMismatch
 
---2a.)
---explanation to be written here
--- something something appends h1 and h2 to start of each list in aList
+--2b.)
+--Appends h1 and h2 to start of each list in aList
 attachHeads :: a -> a -> [([a],[a])] -> [([a],[a])] 
 attachHeads h1 h2 aList = [(h1:xs,h2:ys) | (xs,ys) <- aList]
 
@@ -56,10 +55,8 @@ maximaBy valueFcn xs = helper (elemIndices (maximum valueList) valueList) xs
     valueList = (map valueFcn xs)
 
 
---type AlignmentType = (String,String)
+type AlignmentType = (String,String)
 
 --returns a list of all optimal alignments between string1 and string2
---optAlignments :: String -> String -> [AlignmentType]
---optAlignments string1 string2
-
-
+optAlignments :: String -> String -> [AlignmentType]
+optAlignments string1 string2 = 
