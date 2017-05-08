@@ -70,7 +70,7 @@ type AlignmentType = (String,String)
 
 --returns a list of all optimal alignments between string1 and string2
 optAlignments :: String -> String -> [AlignmentType]
-optAlignments string1 string2 = maximaBy fst (optAl (length string1) (length string2))
+optAlignments string1 string2 = snd $ maximaBy fst (optAl (length string1) (length string2))
   where
     optAl i j = optTable!!i!!j
     optTable = [[ optEntry i j | j <-[0..]] | i<-[0..] ]
@@ -78,9 +78,10 @@ optAlignments string1 string2 = maximaBy fst (optAl (length string1) (length str
     optEntry :: Int -> Int -> (Int, [AlignmentType])
     optEntry 0 0 = (0, [([],[])])
     optEntry i 0 = (scoreSpace + a, attachTails "-" "" b)  --something to be added to lists
-    optEntry 0 j = (scoreSpace + c, attachTails "" "-" d)	--something to be added to lists
       where
         (a,b) = optAl i-1 0
+    optEntry 0 j = (scoreSpace + c, attachTails "" "-" d)	--something to be added to lists
+      where
         (c,d) = optAl 0 j-1
     optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
       where
