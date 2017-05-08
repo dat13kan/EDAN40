@@ -12,7 +12,6 @@ string3 = "apa "
 stringList = ["cs", "efd", "lth", "it"]
 
 
-
 -- 2a.)
 --returns the score of the optimal alignment of the two strings 
 similarityScore :: String -> String -> Int
@@ -41,6 +40,9 @@ score x y
 attachHeads :: a -> a -> [([a],[a])] -> [([a],[a])] 
 attachHeads h1 h2 aList = [(h1:xs,h2:ys) | (xs,ys) <- aList]
 
+attachTails :: a -> a -> [([a],[a])] -> [([a],[a])]
+attachTails h1 h2 aList = [(xs:h1,ys:h2) | (xs,ys) <- aList]
+
 
 --generalizes the maximum function :
 --1. The "value" of an element is defined by a function supplied as a parameter.
@@ -64,7 +66,7 @@ optAlignments string1 string2 = optAl (length string1) (length string2)
     optAl i j = optTable!!i!!j
     optTable = [[ optEntry i j | j <-[0..]] | i<-[0..] ]
 
-    optEntry :: Int -> Int -> Int
+    optEntry :: Int -> Int -> [AlignmentType]
     optEntry i 0 = i * scoreSpace
     optEntry 0 j = j * scoreSpace
     optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
