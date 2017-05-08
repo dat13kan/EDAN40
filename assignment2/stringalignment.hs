@@ -50,7 +50,7 @@ attachHeads h1 h2 aList = [(h1:xs,h2:ys) | (xs,ys) <- aList]
 
 --Appends h1 and h2 to the end of each list in aList
 attachTails :: a -> a -> [([a],[a])] -> [([a],[a])]
-attachTails h1 h2 aList = [(xs++[h1],ys++[h2]) | (xs,ys) <- aList]
+attachTails t1 t2 aList = [(xs++[t1],ys++[t2]) | (xs,ys) <- aList]
 
 
 --generalizes the maximum function :
@@ -77,8 +77,8 @@ optAlignments string1 string2 = optAl (length string1) (length string2)
 
     optEntry :: Int -> Int -> (Int, [AlignmentType])
     optEntry 0 0 = (0, [([],[])]
-    optEntry i 0 = (scoreSpace + fst (optAl i-1 0), [([],[])]) --something to be added to lists
-    optEntry 0 j = (scoreSpace + fst (optAl 0 j-1), [([],[])]) --something to be added to lists
+    optEntry i 0 = (scoreSpace + fst (optAl i-1 0), attachTails "-" "" (snd (optAl i-1 0)))  --something to be added to lists
+    optEntry 0 j = (scoreSpace + fst (optAl 0 j-1), attachTails "" "-" (snd (optAl 0 j-1))) --something to be added to lists
     optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
       where
          x = string1!!(i-1)
