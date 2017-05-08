@@ -9,6 +9,14 @@ string1 = "apa"
 string2 = "aka"
 string3 = "apa "
 
+--test for attachTails
+h1 = "o"
+h2 = "a"
+
+aList1 = "le"
+aList2 = "pa"
+aList = [(stringList,stringList)]
+
 stringList = ["cs", "efd", "lth", "it"]
 
 
@@ -40,8 +48,9 @@ score x y
 attachHeads :: a -> a -> [([a],[a])] -> [([a],[a])] 
 attachHeads h1 h2 aList = [(h1:xs,h2:ys) | (xs,ys) <- aList]
 
+--Appends h1 and h2 to the end of each list in aList
 attachTails :: a -> a -> [([a],[a])] -> [([a],[a])]
-attachTails h1 h2 aList = [(xs:h1,ys:h2) | (xs,ys) <- aList]
+attachTails h1 h2 aList = [(xs++[h1],ys++[h2]) | (xs,ys) <- aList]
 
 
 --generalizes the maximum function :
@@ -60,16 +69,16 @@ maximaBy valueFcn xs = helper (elemIndices (maximum valueList) valueList) xs
 type AlignmentType = (String,String)
 
 --returns a list of all optimal alignments between string1 and string2
-optAlignments :: String -> String -> [AlignmentType]
-optAlignments string1 string2 = optAl (length string1) (length string2)
-  where
-    optAl i j = optTable!!i!!j
-    optTable = [[ optEntry i j | j <-[0..]] | i<-[0..] ]
-
-    optEntry :: Int -> Int -> [AlignmentType]
-    optEntry i 0 = i * scoreSpace
-    optEntry 0 j = j * scoreSpace
-    optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
-      where
-         x = string1!!(i-1)
-         y = string2!!(j-1)
+--optAlignments :: String -> String -> [AlignmentType]
+--optAlignments string1 string2 = optAl (length string1) (length string2)
+--  where
+--    optAl i j = optTable!!i!!j
+ --   optTable = [[ optEntry i j | j <-[0..]] | i<-[0..] ]
+--
+  --  optEntry :: Int -> Int -> [AlignmentType]
+    --optEntry i 0 = i * scoreSpace
+--    optEntry 0 j = j * scoreSpace
+  --  optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
+   --   where
+     --    x = string1!!(i-1)
+      --   y = string2!!(j-1)
