@@ -5,9 +5,11 @@ import Data.List
 scoreMatch = 0
 scoreMismatch = -1
 scoreSpace = -1
-string1 = "apa"
-string2 = "aka"
+string1 = "writer"
+string2 = "vintner"
 string3 = "apa "
+string4 = "apa"
+string5 = "aka"
 
 --test for attachTails
 h1 = "o"
@@ -68,23 +70,42 @@ maximaBy valueFcn xs = helper (elemIndices (maximum valueList) valueList) xs
 
 type AlignmentType = (String,String)
 
+optScore :: Char -> Char -> Int
+optScore  _ '-' = scoreSpace
+optScore  '-' _ = scoreSpace
+optScore x y 
+    |x == y = scoreMatch
+    |otherwise  = scoreMismatch
+
 --returns a list of all optimal alignments between string1 and string2
 optAlignments :: String -> String -> [AlignmentType]
-optAlignments string1 string2 = snd $ maximaBy fst (optAl (length string1) (length string2))
+optAlignments string1 string2 = snd $ optAl (length string1) (length string2)
   where
     optAl i j = optTable!!i!!j
     optTable = [[ optEntry i j | j <-[0..]] | i<-[0..] ]
-      
+
+    add :: Char -> Char -> (Int, [AlignmentType]) -> (Int, [AlignmentType])
+    add t1 t2 (i, a) = ((score t1 t2) + i, attachTails t1 t2 a)
+
+    sx, sy :: Int -> Char
+    sx x = string1!!(x-1)
+    sy y = string2!!(y-1)
+
     optEntry :: Int -> Int -> (Int, [AlignmentType])
     optEntry 0 0 = (0, [([],[])])
-    optEntry i 0 = (scoreSpace + a, attachTails (string1!!(i-1)) '-' b)  --something to be added to lists
+    optEntry i 0 = add (sx i) '-' $ optAl (i-1) 0
+    optEntry 0 j = add '-' (sy j) $ optAl 0 (j-1)
+    optEntry i j = (fst.head $ result, concat.map snd $ result)
       where
-        (a,b) = optAl (i-1) 0
-    optEntry 0 j = (scoreSpace + c, attachTails '-' (string2!!(j-1)) d)	--something to be added to lists
-      where
-        (c,d) = optAl 0 (j-1)
-    optEntry i j = maximaBy score (map fst optAl (i-1) (j-1))
---maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
-      where
-         x = string1!!(i-1)
-         y = string2!!(j-1)
+        result = maximaBy fst [add (sx i) (sy j) $ optAl (i-1) (j-1),add (sx i) '-' $ optAl (i-1) j, add '-' (sy j) $ optAl i (j-1)]
+
+showAl :: AlignmentType -> String
+showAl alignment = (fst alignment) ++ "\n" ++ (snd alignment) ++ "\n\n\n" 
+
+outputOptAlignments :: String -> String -> IO ()
+outputOptAlignments string1 string2 = do
+
+  let alignments = optAlignments string1 string2
+  putStrLn $ "There are " ++ (show.length $ alignments) ++ " optimal alignments:\n\n"
+  mapM_ putStr $ map showAl $ alignments 
+  putStrLn $ "There were " ++ (show.length $ alignments) ++ " optimal alignments!"  
