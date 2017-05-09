@@ -83,7 +83,8 @@ optAlignments string1 string2 = snd $ maximaBy fst (optAl (length string1) (leng
     optEntry 0 j = (scoreSpace + c, attachTails '-' (string2!!(j-1)) d)	--something to be added to lists
       where
         (c,d) = optAl 0 (j-1)
-    optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
+    optEntry i j = maximaBy score (map fst optAl (i-1) (j-1))
+--maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
       where
          x = string1!!(i-1)
          y = string2!!(j-1)
