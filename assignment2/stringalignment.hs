@@ -77,12 +77,12 @@ optAlignments string1 string2 = snd $ maximaBy fst (optAl (length string1) (leng
       
     optEntry :: Int -> Int -> (Int, [AlignmentType])
     optEntry 0 0 = (0, [([],[])])
-    optEntry i 0 = (scoreSpace + a, attachTails "-" "" b)  --something to be added to lists
+    optEntry i 0 = (scoreSpace + a, attachTails (string1!!(i-1)) '-' b)  --something to be added to lists
       where
-        (a,b) = optAl i-1 0
-    optEntry 0 j = (scoreSpace + c, attachTails "" "-" d)	--something to be added to lists
+        (a,b) = optAl (i-1) 0
+    optEntry 0 j = (scoreSpace + c, attachTails '-' (string2!!(j-1)) d)	--something to be added to lists
       where
-        (c,d) = optAl 0 j-1
+        (c,d) = optAl 0 (j-1)
     optEntry i j = maximum [(optAl (i-1) (j-1)) + (score x y), (optAl i (j-1)) + (score x '-'), (optAl (i-1) j) + (score '-' y)]
       where
          x = string1!!(i-1)
