@@ -35,7 +35,6 @@ word :: Parser String
 word = token (letter # iter letter >-> cons)
 
 chars :: Int -> Parser String
-chars n =  error "chars not implemented"
 chars n
     | n <= 0    = return []
     | otherwise = char # chars n-1 >-> Cons ! return []
