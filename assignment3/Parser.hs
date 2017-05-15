@@ -43,7 +43,7 @@ accept :: String -> Parser String
 accept w = (token (chars (length w))) ? (==w)
 
 require :: String -> Parser String
-require w  = (token (chars (length w))) ? (==w) ! err ("Required string "++w++" missing") 
+require w  = accept w ! err ("Required string "++w++" missing") 
 
 lit :: Char -> Parser Char
 lit c = token char ? (==c)
