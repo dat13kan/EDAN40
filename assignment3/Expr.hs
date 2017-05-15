@@ -79,7 +79,7 @@ value (Sub a b) dict = (value a dict) - (value b dict)
 value (Mul a b) dict = (value a dict) * (value b dict)
 value (Div a b) dict = if (value b dict) == 0
                        then error ("Divide by 0")
-					   else $ (value a dict) / (value b dict)
+                       else (value a dict) `div` (value b dict)
 
 instance Parse Expr where
     parse = expr
