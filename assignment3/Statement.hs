@@ -27,7 +27,7 @@ exec (If cond thenStmts elseStmts: stmts) dict input =
 skipStatement = accept "skip" # require ";" >-> buildSkip
 buildSkip _ = Skip
 
-beginStatement statement = accept "begin" -# parse statement #- require "end" >-> Begin
+beginStatement = accept "begin" -# iter parse #- require "end" >-> Begin
 
 whileStatement = accept "while" -# Expr.parse #- require "do" >-> While
 
