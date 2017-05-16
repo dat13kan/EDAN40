@@ -11,7 +11,8 @@ data Statement =
     Begin [Statement] |
     While Expr.T Statement |
     Read String |
-    Write Expr.T
+    Write Expr.T |
+	Comment String
 
     deriving Show
 
@@ -39,6 +40,8 @@ readStatement = accept "read" -# word #- require ";" >-> Read
 
 writeStatement = accept "write" -# Expr.parse #- require ";" >-> Write
 
+comment = accept "--" -# chars length.head.lines >-> Comment
+
 instance Parse Statement where
-  parse = assignment ! ifStatement ! skipStatement ! beginStatement ! whileStatement ! readStatement ! writeStatement
+  parse = comment | assignment ! ifStatement ! skipStatement ! beginStatement ! whileStatement ! readStatement ! writeStatement
   toString = error "Statement.toString not implemented"
