@@ -28,7 +28,7 @@ import Parser hiding (T)
 import qualified Dictionary
 
 data Expr = Num Integer | Var String | Add Expr Expr 
-       | Sub Expr Expr | Mul Expr Expr | Div Expr Expr
+       | Sub Expr Expr | Mul Expr Expr | Div Expr Expr | Exp Expr Expr
          deriving Show
 
 type T = Expr
@@ -46,6 +46,8 @@ mulOp = lit '*' >-> (\ _ -> Mul) !
 
 addOp = lit '+' >-> (\ _ -> Add) !
         lit '-' >-> (\ _ -> Sub)
+		
+expOp = lit '^' >-> (\ _ -> Exp)
 
 bldOp e (oper,e') = oper e e'
 
@@ -53,12 +55,18 @@ factor = num !
          var !
          lit '(' -# expr #- lit ')' !
          err "illegal factor"
-             
-term' e = mulOp # factor >-> bldOp e #> term' ! return e
+
+--LINES BELOW WRONG, UNDER WORK   		 
+term' e = mulOp # factor >-> bldOp e #> term' ! expOp # exp >-> bldOp e #> exp' ! return e
 term = factor #> term'
-       
-expr' e = addOp # term >-> bldOp e #> expr' ! return e
+
+--LINES BELOW WRONG, UNDER WORK       
+expr' e = addOp # term >-> bldOp e #> expr' ! expOp # exp >-> bldOp e #> exp' ! return e 
 expr = term #> expr'
+
+--TODO
+exp' e = 
+exp = expr #> exp'
 
 parens cond str = if cond then "(" ++ str ++ ")" else str
 
@@ -69,6 +77,7 @@ shw prec (Add t u) = parens (prec>5) (shw 5 t ++ "+" ++ shw 5 u)
 shw prec (Sub t u) = parens (prec>5) (shw 5 t ++ "-" ++ shw 6 u)
 shw prec (Mul t u) = parens (prec>6) (shw 6 t ++ "*" ++ shw 6 u)
 shw prec (Div t u) = parens (prec>6) (shw 6 t ++ "/" ++ shw 7 u)
+shw prec (Exp t u) = parens (prec>8) (shw 8 t ++ "^" ++ shw 8 u)
 
 value :: Expr -> Dictionary.T String Integer -> Integer
 value (Num n) _ = n
@@ -80,6 +89,7 @@ value (Mul a b) dict = (value a dict) * (value b dict)
 value (Div a b) dict = if (value b dict) == 0
                        then error ("Divide by 0")
                        else (value a dict) `div` (value b dict)
+value (Exp a b) dict = (value a dict) ^ (value b dict)
 
 instance Parse Expr where
     parse = expr
