@@ -58,7 +58,14 @@ readStatement = accept "read" -# word #- require ";" >-> Read
 writeStatement = accept "write" -# Expr.parse #- require ";" >-> Write
 
 --comment = accept "--" -# chars.length.head.lines >-> Comment
+indent :: Int -> String
+indent ind 
+    |ind <= 0  = ""
+    |otherwise = "\t"++indent (ind-1)
+
+shw :: Int -> T -> String
+shw ind (Assignment variable expression) = indent ind ++variable++":="++(toString expression)++";\n"
 
 instance Parse Statement where
   parse = {-comment ! -}assignment ! ifStatement ! skipStatement ! beginStatement ! whileStatement ! readStatement ! writeStatement
-  toString = error "Statement.toString not implemented"
+  toString = shw 0
