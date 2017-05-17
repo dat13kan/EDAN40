@@ -9,37 +9,39 @@ data Statement =
     If Expr.T Statement Statement |
     Skip |
     Begin [Statement] |
-    While Expr.T [Statement] |
+    While Expr.T Statement |
     Read String |
     Write Expr.T |
-	Comment String
+    Comment String
     deriving Show
 
 assignment = word #- accept ":=" # Expr.parse #- require ";" >-> buildAss
 buildAss (v, e) = Assignment v e
 
 exec :: [T] -> Dictionary.T String Integer -> [Integer] -> [Integer]
-exec (Assignment variable expression: stmts) dict input = do
-    Dictionary.insert (variable, expression) dict
-    exec stmts dict input
+exec [] _ _ = []
+exec (Assignment variable expression: stmts) dict input =
+    let dictionary = Dictionary.insert (variable, Expr.value expression dict) dict
+    in exec stmts dictionary input
 exec (If cond thenStmts elseStmts: stmts) dict input = 
     if (Expr.value cond dict)>0 
     then exec (thenStmts: stmts) dict input
     else exec (elseStmts: stmts) dict input
-exec (Skip stmt: stmts) dict input =
+exec (Skip: stmts) dict input =
     exec stmts dict input
-exec (Begin beginstmts: stmts) dict input
+exec (Begin beginStmts: stmts) dict input =
+    exec (beginStmts++stmts) dict input
 exec (While cond whileStmts: stmts) dict input =
     if (Expr.value cond dict)>0
     then exec (whileStmts: While cond whileStmts: stmts) dict input
-	else exec stmts dict input
-exec (Read variable: stmts) dict (h:input) = do
-    insert (variable, h) dict
-    exec stmts dict input
+    else exec stmts dict input
+exec (Read variable: stmts) dict (h:input) =
+    let dictionary = Dictionary.insert (variable, h) dict
+    in exec stmts dictionary input
 exec (Write expression: stmts) dict input =
-    (Dictionary.lookup expression dict):(exec stmts dict input)
-exec (Comment str: stmts) dict input
-	
+    (Expr.value expression dict):(exec stmts dict input)
+--exec (Comment str: stmts) dict input
+
 skipStatement = accept "skip" # require ";" >-> buildSkip
 buildSkip _ = Skip
 
@@ -55,8 +57,8 @@ readStatement = accept "read" -# word #- require ";" >-> Read
 
 writeStatement = accept "write" -# Expr.parse #- require ";" >-> Write
 
-comment = accept "--" -# chars.length.head.lines >-> Comment
+--comment = accept "--" -# chars.length.head.lines >-> Comment
 
 instance Parse Statement where
-  parse = comment ! assignment ! ifStatement ! skipStatement ! beginStatement ! whileStatement ! readStatement ! writeStatement
+  parse = {-comment ! -}assignment ! ifStatement ! skipStatement ! beginStatement ! whileStatement ! readStatement ! writeStatement
   toString = error "Statement.toString not implemented"
