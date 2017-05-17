@@ -8,4 +8,4 @@ instance Parse T where
   parse = iter Statement.parse  >-> Program
   toString = error "Program.toString not implemented"
              
-exec = Statement.exec $ parse 
+exec (Program p) = Statement.exec p Dictionary.empty
