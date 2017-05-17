@@ -65,6 +65,12 @@ indent ind
 
 shw :: Int -> T -> String
 shw ind (Assignment variable expression) = indent ind ++variable++":="++(toString expression)++";\n"
+shw ind (If cond thenStmts elseStmts) = indent ind ++ "if " ++ (toString cond) ++ " then\n" ++ shw (ind+1) thenStmts ++ "else\n" ++ shw (ind+1) elseStmts
+shw ind (Skip) = indent ind ++ "skip;\n"
+shw ind (Begin beginStmts) = indent ind ++ "begin\n"++ concat (map (shw (ind+1)) beginStmts) ++ "end\n"
+shw ind (While cond whileStmts) = 
+shw ind (Read variable) = indent ind ++ "read " ++ variable ++ ";\n"
+shw ind (Write expression) = indent ind ++ "write " ++ (toString expression) ++ ";\n"
 
 instance Parse Statement where
   parse = {-comment ! -}assignment ! ifStatement ! skipStatement ! beginStatement ! whileStatement ! readStatement ! writeStatement
