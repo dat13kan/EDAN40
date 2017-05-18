@@ -80,4 +80,6 @@ s4 = "\
 
 p4 = fromString s4
 
+sp4 = putStr (toString p4)
+
 rp4 = Program.exec p4 [4,4]
